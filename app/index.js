@@ -7,15 +7,14 @@ const app = express();
 
 app.use(morgan("dev"))
 app.use(express.json());
-app.use(express.urlencoded({extended: true }));
+app.use(express.urlencoded({extended: true}));
 
 mongoose.connect('mongodb://root:root@mongo:27017/b3?authSource=admin', {
     useNewUrlParser: true
 }, (error) => {
-    if (error){
+    if (error) {
         console.log(error);
-    }
-    else {
+    } else {
         console.log('BD connect');
     }
 })
@@ -30,6 +29,6 @@ app.get("/", (req, res) => {
 app.use('/classes', classeRouter);
 app.use('/students', studentRouter);
 
-app.listen( 4500, () => {
+app.listen(4500, () => {
     console.log('Server is running on http://127.0.0.1:4500');
 });

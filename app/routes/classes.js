@@ -1,10 +1,9 @@
-const { application, request, response } = require('express');
+const {application, request, response} = require('express');
 const express = require('express');
-const { v4: uuidv4} = require('uuid');
+const {v4: uuidv4} = require('uuid');
 
 let router = express.Router();
 let classes = [];
-
 
 
 router.post('/', (request, response) => {
@@ -36,8 +35,10 @@ router.get('/:id', (request, response) => {
 router.delete('/:id', (request, response) => {
     const {id} = request.params;
 
-classes = classes.filter(Object => {return Object.id !== id; })
-response.status(200).json(classes);
+    classes = classes.filter(Object => {
+        return Object.id !== id;
+    })
+    response.status(200).json(classes);
 });
 
 router.put('/:id', (request, response) => {

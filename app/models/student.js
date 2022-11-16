@@ -12,7 +12,7 @@ const studentSchema = new mongoose.Schema({
         trim: true
     }
 
-},{
+}, {
     timestamps: {
         createdAt: 'created_at',
         updatedAt: "updated_at"
