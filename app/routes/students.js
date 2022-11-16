@@ -7,7 +7,7 @@ let router = express.Router();
 router.post('/', async (req, res) => {
     const {firstname, lastname} = req.body;
 
-    if(typeof firstname === 'undefined' || typeof lastname === 'undefined') {
+    if (typeof firstname === 'undefined' || typeof lastname === 'undefined') {
         return res.status(500).json({
             "msg": "vous devez entrer un nom et un prénom !"
         })
@@ -34,12 +34,13 @@ router.get('/:id', async (req, res) => {
     const id = parseInt(req.params.id)
 
     try {
-        const docs = await db.collection('students').find({id}).toArray()        
+        const docs = await db.collection('students').find({id}).toArray()
         res.status(200).json(docs);
-    } catch (err) {       
-        console.log(err)       
-         throw err    
-        }});
+    } catch (err) {
+        console.log(err)
+        throw err
+    }
+});
 
 
 module.exports = router;
