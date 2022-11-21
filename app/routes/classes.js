@@ -44,7 +44,7 @@ router.get('/:id', async (request, response) => {
         return response.status(500).json(error)
     }
 
-
+    
 })
 
 router.delete('/:id', async (request,response) => {
