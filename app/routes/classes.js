@@ -5,17 +5,17 @@ const classeModel = require('../models/classe')
 let router = express.Router()
 
 router.post('/', async (request, response) =>{
-    const {label} = request.body
+    const {name} = request.body
 
-    if(typeof label === "undefined" || label == "") {
+    if(typeof name === "undefined" || name == "") {
         return response.status(500).json({
-            msg: "Veuillez saisir un label valide"
+            msg: "Veuillez saisir un nom valide"
         })
     }
 
     try{
         let classe = await classeModel.create({
-            label
+            name
         })
         return response.status(200).json(classe)
     }catch(error){
@@ -62,12 +62,12 @@ router.delete('/:id', async (request,response) => {
 
 router.put('/:id', async (request,response) =>{
     const {id} = request.params
-    const {label} = request.body
+    const {name} = request.body
 
     try {
         let classe = await classeModel.findByIdAndUpdate(id,
             {
-                label
+                name
             },{
                 new: true
             })

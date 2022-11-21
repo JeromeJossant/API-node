@@ -9,7 +9,7 @@ app.use(morgan("dev"))
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-mongoose.connect(process.env.MONGO_URl, {
+mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true
 }, (error) => {
     if (error) {
