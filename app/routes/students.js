@@ -1,14 +1,15 @@
 const express = require('express');
 const student = require('../models/student');
+const bcrypt = require('bcrypt')
 const studentModel = require('../models/student')
 
 let router = express.Router();
 
-router.post('/', async (req, res) => {
-    const {firstname, lastname} = req.body;
+router.post('/', async (request, response) => {
+    const {firstname, lastname} = request.body;
 
     if (typeof firstname === 'undefined' || typeof lastname === 'undefined') {
-        return res.status(500).json({
+        return response.status(500).json({
             "msg": "vous devez entrer un nom et un prénom !"
         })
 
@@ -20,9 +21,9 @@ router.post('/', async (req, res) => {
             lastname
         });
 
-        return res.status(200).json(student);
+        return response.status(200).json(student);
     } catch (error) {
-        return res.status(500).json({
+        return response.status(500).json({
             "msg": "il y a eu une erreur: " + error
         });
     }
@@ -30,7 +31,7 @@ router.post('/', async (req, res) => {
 });
 
 router.delete('/:id', async (request,response) => {
-    const {id} = request.params
+    const {id} = request.params;
 
     try {
         let student = await studentModel.findByIdAndRemove(id)
@@ -43,8 +44,8 @@ router.delete('/:id', async (request,response) => {
 })
 
 router.put('/:id', async (request,response) =>{
-    const {id} = request.params
-    const {firstname, lastname} = request.body
+    const {id} = request.params;
+    const {firstname, lastname} = request.body;
 
     try {
         let student = await studentModel.findByIdAndUpdate(id,
@@ -63,7 +64,7 @@ router.put('/:id', async (request,response) =>{
 })
 
 router.get('/:id', async (request, response) => {
-    const {id} = request.params
+    const {id} = request.params;
 
     try {
         let student = await studentModel.findById(id)
@@ -84,6 +85,101 @@ router.get('/', async (request, response) => {
     }
 })
 
+router.post('/register', async (request, response) =>{
+
+    const {email, email_cfg, password, password_cfg, firstname, lastname} = request.body;
+
+    if( (typeof email === "undefined" || email.trim() === "") || 
+        (typeof password === "undefined" || password.trim() === "")
+        ){
+
+        return response.status(500).json({
+            msg: "Il faut remplir tous les champs"
+        });
+    }
+
+    if ( email !== email_cfg || password !== password_cfg){
+        return response.status(500).json({
+            msg: "les confirmations ne sont pas exactes"
+        });
+    }
+
+    if (typeof firstname === 'undefined' || typeof lastname === 'undefined') {
+        return response.status(500).json({
+            "msg": "vous devez entrer un nom et un prénom !"
+        });
+    }
+
+    try {
+
+        let exist = await studentModel.findOne({email});
+
+        if (exist){
+            return response.status(500).json({
+                msg: "Le compte existe déjà"
+            });
+        }
+
+        let student =  await studentModel.create({
+            email: email.trim(),
+            password: await bcrypt.hash(password.trim(), 10),
+            firstname: typeof firstname !== 'undefined' ? firstname.trim() : "",
+            lastname: typeof lastname !== 'undefined' ? lastname.trim() : "",
+        })
+
+
+    return response.status(200).json(student);
+    } catch(error) {
+        console.log(error);
+        return response.status(500).json({
+            msg: "Échec lors de la création du compte"
+        })
+    }
+
+
+})
+
+
+router.post('/login', async (request, response) =>{
+
+    const {email, password} = request.body;
+
+    if( (typeof email === "undefined" || email.trim() === "") || 
+        (typeof password === "undefined" || password.trim() === "")
+        ){
+
+        return response.status(500).json({
+            msg: "Il faut remplir tous les champs"
+        });
+    }
+
+    try {
+
+        let student = await studentModel.findOne({email});
+
+        if (!student){
+            return response.status(500).json({
+                msg: "Erreur d'authentification"
+            });
+        }
+
+        let compare = bcrypt.compare(password, student.password);
+
+        if (!compare){
+            return response.status(500).json({
+                msg: "Erreur d'authentification"
+            });
+        }
+
+
+    return response.status(200).json(student);
+    } catch(error) {
+        console.log(error);
+        return response.status(500).json({
+            msg: "Échec lors de la connexion"
+        })
+    }
+})
 
 
 module.exports = router;
