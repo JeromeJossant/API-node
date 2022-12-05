@@ -23,7 +23,29 @@ router.post('/', async (request, response) =>{
             msg: error
         })
     }
-})
+});
+
+router.post('/add-student', async (request, response) => {
+    const {studentId, classeId} = request.body;
+
+
+    try {
+       const classe = await classeModel.findOneAndUpdate({
+            _id: classeId
+        }, {
+            $addToSet: {
+                students: [studentId]
+            }
+        }, {
+            new: true
+        
+        }).populate('students')
+    
+        return response.status(200).json(classe);
+    } catch (error) {
+        return response.status(500).json(error)
+    }
+});
 
 router.get('/', async (request, response) => {
     try {
@@ -32,7 +54,7 @@ router.get('/', async (request, response) => {
     } catch (error) {
         return response.status(500).json(error)
     }
-})
+});
 
 router.get('/:id', async (request, response) => {
     const {id} = request.params
@@ -45,7 +67,7 @@ router.get('/:id', async (request, response) => {
     }
 
     
-})
+});
 
 router.delete('/:id', async (request,response) => {
     const {id} = request.params
@@ -58,7 +80,7 @@ router.delete('/:id', async (request,response) => {
     }catch (error) {
         return response.status(500).json(error)
     }
-})
+});
 
 router.put('/:id', async (request,response) =>{
     const {id} = request.params
@@ -78,6 +100,6 @@ router.put('/:id', async (request,response) =>{
         return response.status(500).json(error)
     }
 
-})
+});
 
 module.exports = router

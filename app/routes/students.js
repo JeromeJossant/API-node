@@ -1,9 +1,16 @@
 const express = require('express');
 const student = require('../models/student');
 const bcrypt = require('bcrypt')
-const studentModel = require('../models/student')
+const studentModel = require('../models/student');
+const { request, response } = require('express');
 
 let router = express.Router();
+
+
+router.get("/me", async (request, response) => {
+
+    return response.status(200).json(request.session.student);
+})
 
 router.post('/', async (request, response) => {
     const {firstname, lastname} = request.body;
@@ -172,6 +179,7 @@ router.post('/login', async (request, response) =>{
         }
 
 
+    request.session.student = student;
     return response.status(200).json(student);
     } catch(error) {
         console.log(error);
@@ -179,7 +187,10 @@ router.post('/login', async (request, response) =>{
             msg: "Échec lors de la connexion"
         })
     }
+
 })
+
+
 
 
 module.exports = router;

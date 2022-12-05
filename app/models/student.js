@@ -24,7 +24,8 @@ const studentSchema = new mongoose.Schema({
         type: String,
         require: [true, 'Entrez un nom'],
         trim: true
-    }
+    },
+    classe: {type: mongoose.Schema.Types.ObjectId, ref: 'Classe'}
 
 }, {
     timestamps: {
