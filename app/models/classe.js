@@ -7,7 +7,8 @@ const classeSchema = new mongoose.Schema({
         require: [true, 'Entrez un nom de classe'],
         trim: true
     },
-    students: [{type: mongoose.Schema.Types.ObjectId, ref: 'Student'}]
+    students: [{type: mongoose.Schema.Types.ObjectId, ref: 'Student'}],
+    cours: {type: mongoose.Schema.Types.ObjectId, ref: 'Cours'}
 
 }, {
     timestamps: {

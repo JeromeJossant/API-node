@@ -37,6 +37,28 @@ router.post('/', async (request, response) => {
 
 });
 
+router.post('/add-classe', async (request, response) => {
+    const {studentId, classeId} = request.body;
+
+
+    try {
+       const student = await studentModel.findOneAndUpdate({
+            _id: studentId
+        }, {
+            $addToSet: {
+                classe: [classeId]
+            }
+        }, {
+            new: true
+        
+        }).populate('classe')
+    
+        return response.status(200).json(student);
+    } catch (error) {
+        return response.status(500).json(error)
+    }
+});
+
 router.delete('/:id', async (request,response) => {
     const {id} = request.params;
 
