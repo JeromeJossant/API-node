@@ -19,11 +19,10 @@ router.post('/', async (request, response) => {
             label,
             startDate : Date.parse(startDate),
             endDate : Date.parse(endDate),
-            $addToSet: {
-                classes: [classeId]
-            }
-        });
+            classes : classeId
+        })
 
+        console.error(classeId)
         return response.status(200).json(lesson);
     } catch (error) {
         return response.status(500).json({
@@ -33,7 +32,9 @@ router.post('/', async (request, response) => {
 
 });
 
-router.post('/add-classe', async (request, response) => {
+
+
+/* router.post('/add-classe', async (request, response) => {
     const {lessonId, classeId} = request.body;
 
 
@@ -42,18 +43,18 @@ router.post('/add-classe', async (request, response) => {
             _id: lessonId
         }, {
             $addToSet: {
-                classe: [classeId]
+                classes: [classeId]
             }
         }, {
             new: true
         
-        }).populate('classe')
+        }).populate('classes')
     
         return response.status(200).json(lesson);
     } catch (error) {
         return response.status(500).json(error)
     }
-});
+}); */
 
 router.delete('/:id', async (request,response) => {
     const {id} = request.params;
@@ -63,6 +64,7 @@ router.delete('/:id', async (request,response) => {
         return response.status(200).json({
             msg: "Cours bien supprimée !"
         })
+
     }catch (error) {
         return response.status(500).json(error)
     }
@@ -103,8 +105,8 @@ router.get('/:id', async (request, response) => {
 
 router.get('/', async (request, response) => {
     try {
-        let lesson = await lessonModel.find()
-        return response.status(200).json(lesson)
+        let lessons = await lessonModel.find()
+        return response.status(200).json(lessons)
     } catch (error) {
         return response.status(500).json(error)
     }

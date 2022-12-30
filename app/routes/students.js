@@ -51,7 +51,7 @@ router.post('/add-classe', async (request, response) => {
         }, {
             new: true
         
-        }).populate('classe')
+        }).find('classe')
     
         return response.status(200).json(student);
     } catch (error) {

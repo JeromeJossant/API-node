@@ -19,7 +19,7 @@ const lessonSchema = new mongoose.Schema({
         require: [true, 'Entrez une date de fin'],
         trim: true
     },
-    classe: {type: mongoose.Schema.Types.ObjectId, ref: 'Classe'}
+    classes: {type: mongoose.Schema.Types.ObjectId, ref: 'Classe'}
 
 }, {
     timestamps: {
@@ -30,4 +30,4 @@ const lessonSchema = new mongoose.Schema({
 
 
 
-module.exports = mongoose.model('lesson', lessonSchema);
+module.exports = mongoose.model('Lesson', lessonSchema);

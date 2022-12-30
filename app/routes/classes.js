@@ -56,6 +56,19 @@ router.get('/', async (request, response) => {
     }
 });
 
+router.get('/', async (request, response) => {
+    try {
+        let classes = await classeModel.find()
+
+        .populate({path: 'students', select: '-password'})
+        return response.status(200).json(classes)
+    } catch (error) {
+        return response.status(500).json(error)
+    }
+});
+
+
+
 router.get('/:id', async (request, response) => {
     const {id} = request.params
 
