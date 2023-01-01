@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const presenceSchema = new mongoose.Schema({
 
-    lesson: {type: mongoose.Schema.Types.ObjectId, ref: 'Lesson'},
+    session: {type: mongoose.Schema.Types.ObjectId, ref: 'Session'},
     student: {type: mongoose.Schema.Types.ObjectId, ref: 'Student'}
 
 }, {

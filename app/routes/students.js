@@ -12,6 +12,7 @@ router.get("/me", async (request, response) => {
     return response.status(200).json(request.session.student);
 })
 
+// voir le register en bas pour ajouter/inscrire un étudiant
 router.post('/', async (request, response) => {
     const {firstname, lastname} = request.body;
 

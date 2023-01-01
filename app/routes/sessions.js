@@ -1,27 +1,28 @@
 const express = require('express');
-const lesson = require('../models/lesson');
-const lessonModel = require('../models/lesson');
+const session = require('../models/session');
+const sessionModel = require('../models/session');
 const { request, response } = require('express');
 
 let router = express.Router();
 
 router.post('/', async (request, response) => {
-    const {label, classeId} = request.body;
+    const {startDate, endDate, lessonId} = request.body;
 
-    if (typeof label === 'undefined') {
+    if (typeof startDate === 'undefined' || typeof endDate === 'undefined') {
         return response.status(500).json({
-            "msg": "Vous devez entrer un label"
+            "msg": "Vous devez entrer une date"
         })
     }
 
     try {
-        let lesson = await lessonModel.create({
-            label,
-            classes : classeId
+        let session = await sessionModel.create({
+            startDate : Date.parse(startDate),
+            endDate : Date.parse(endDate),
+            lessons : lessonId
         })
 
-        console.error(classeId)
-        return response.status(200).json(lesson);
+        console.error(lessonId)
+        return response.status(200).json(session);
     } catch (error) {
         return response.status(500).json({
             "msg": "il y a eu une erreur: " + error
@@ -35,9 +36,9 @@ router.delete('/:id', async (request,response) => {
     const {id} = request.params;
 
     try {
-        let lesson = await lessonModel.findByIdAndRemove(id)
+        let session = await sessionModel.findByIdAndRemove(id)
         return response.status(200).json({
-            msg: "Cours bien supprimée !"
+            msg: "session bien supprimée !"
         })
 
     }catch (error) {
@@ -47,17 +48,17 @@ router.delete('/:id', async (request,response) => {
 
 router.put('/:id', async (request,response) =>{
     const {id} = request.params;
-    const {label, classeId} = request.body;
+    const {startDate, endDate, lessonId} = request.body;
 
     try {
-        let lesson = await lessonModel.findByIdAndUpdate(id,
+        let session = await sessionModel.findByIdAndUpdate(id,
             {
-                label, classeId
+                startDate, endDate, lessonId
             },{
                 new: true
             })
         return response.status(200).json({
-            msg: "Cours bien modifiée !"
+            msg: "session bien modifiée !"
         })
     }catch (error) {
         return response.status(500).json(error)
@@ -69,8 +70,8 @@ router.get('/:id', async (request, response) => {
     const {id} = request.params;
 
     try {
-        let lesson = await lessonModel.findById(id)
-        return response.status(200).json(lesson)
+        let session = await sessionModel.findById(id)
+        return response.status(200).json(session)
     }catch (error) {
         return response.status(500).json(error)
     }
@@ -80,8 +81,8 @@ router.get('/:id', async (request, response) => {
 
 router.get('/', async (request, response) => {
     try {
-        let lessons = await lessonModel.find()
-        return response.status(200).json(lessons)
+        let sessions = await sessionModel.find()
+        return response.status(200).json(sessions)
     } catch (error) {
         return response.status(500).json(error)
     }

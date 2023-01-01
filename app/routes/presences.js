@@ -1,28 +1,28 @@
 const express = require('express');
 const presence = require('../models/presence');
 const presenceModel = require('../models/presence');
-const lesson = require('../models/lesson');
+const session = require('../models/session');
 const { request, response, json } = require('express');
 const cookieParser = require('cookie-parser');
 
 let router = express.Router();
 
 router.post('/', async (request, response) => {
-    const {studentId, lessonId} = request.body;
+    const {studentId, sessionId} = request.body;
 
    
    
-        lesson.findById(lessonId, async (err, lesson) => {
+        session.findById(sessionId, async (err, session) => {
             if (err) {
                 return res.status(500).send(err);
               }            
             const currentDate = new Date();
             console.log(currentDate)
-            if (currentDate >= lesson.startDate && currentDate <= lesson.endDate) {
+            if (currentDate >= session.startDate && currentDate <= session.endDate) {
     
                 let presence = await presenceModel.create({
                     student : studentId,
-                    lesson : lessonId
+                    session : sessionId
                 })
                 return response.status(200).json(presence)
 
@@ -34,7 +34,41 @@ router.post('/', async (request, response) => {
             }
           });
   
-});
+})
+
+router.delete('/:id', async (request,response) => {
+    const {id} = request.params;
+
+    try {
+        let presence = await presenceModel.findByIdAndRemove(id)
+        return response.status(200).json({
+            msg: "présence bien supprimée !"
+        })
+
+    }catch (error) {
+        return response.status(500).json(error)
+    }
+})
+
+router.put('/:id', async (request,response) =>{
+    const {id} = request.params;
+    const {sessionId, studentId} = request.body;
+
+    try {
+        let presence = await presenceModel.findByIdAndUpdate(id,
+            {
+                sessionId, studentId
+            },{
+                new: true
+            })
+        return response.status(200).json({
+            msg: "présence bien modifiée !"
+        })
+    }catch (error) {
+        return response.status(500).json(error)
+    }
+
+})
 
 router.get('/:id', async (request, response) => {
     const {id} = request.params;
